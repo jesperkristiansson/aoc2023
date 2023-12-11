@@ -61,9 +61,12 @@ int main(){
     }
 
     //find a connected pipe, assumes start pipe is not at an edge
-    int direction_from;
+    bool *is_path = new bool[pipes.size()*pipes[0].length()];
+    is_path[y*pipes.size() + x] = true;
     vector<pair<int, int>> path;
     path.push_back(make_pair(x, y));
+
+    int direction_from;
     if(pipe_connections[(unsigned char)pipes[y][x-1]][EAST]){
         --x;
         direction_from = EAST;
@@ -77,7 +80,10 @@ int main(){
 
     pipe_connections['S'][direction_from] = true;
     while(pipes[y][x] != 'S'){
-        path.push_back(make_pair(x, y));
+        is_path[y*pipes.size() + x] = true;
+        if(pipe_connections[(unsigned char)pipes[y][x]][NORTH]){
+            path.push_back(make_pair(x, y));
+        }
 
         if(direction_from != WEST && pipe_connections[(unsigned char)pipes[y][x]][WEST]){
             --x;
@@ -98,23 +104,22 @@ int main(){
     long cnt = 0;
     for(y = 0; y < (int)pipes.size(); ++y){
         for(x = 0; x < (int)pipes[y].length(); ++x){
-            int pipes_one_direction = 0;
-            for(pair<int, int> coord : path){
-                if(coord.second == y && coord.first == x){
-                    pipes_one_direction = 0;
-                    break;
+            if(!is_path[y*pipes.size() + x]){
+                int pipes_one_direction = 0;
+                for(pair<int, int> coord : path){
+                    if(coord.second == y && coord.first < x){
+                        ++pipes_one_direction;
+                    }
                 }
 
-                if(coord.second == y && coord.first < x && pipe_connections[(unsigned char)pipes[coord.second][coord.first]][NORTH]){
-                    ++pipes_one_direction;
+                if(pipes_one_direction % 2 == 1){
+                    ++cnt;
                 }
-            }
-
-            if(pipes_one_direction % 2 == 1){
-                ++cnt;
             }
         }
     }
+
+    delete[] is_path;
 
     cout << cnt << endl;
 }
