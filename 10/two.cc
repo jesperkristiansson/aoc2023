@@ -98,12 +98,13 @@ int main(){
     long cnt = 0;
     for(y = 0; y < (int)pipes.size(); ++y){
         for(x = 0; x < (int)pipes[y].length(); ++x){
-            if(find(path.begin(), path.end(), make_pair(x,y)) != path.end()){
-                continue;
-            }
-
             int pipes_one_direction = 0;
             for(pair<int, int> coord : path){
+                if(coord.second == y && coord.first == x){
+                    pipes_one_direction = 0;
+                    break;
+                }
+
                 if(coord.second == y && coord.first < x && pipe_connections[(unsigned char)pipes[coord.second][coord.first]][NORTH]){
                     ++pipes_one_direction;
                 }
