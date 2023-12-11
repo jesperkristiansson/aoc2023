@@ -63,8 +63,8 @@ int main(){
     //find a connected pipe, assumes start pipe is not at an edge
     bool *is_path = new bool[pipes.size()*pipes[0].length()];
     is_path[y*pipes.size() + x] = true;
-    vector<pair<int, int>> path;
-    path.push_back(make_pair(x, y));
+    vector<int> path[pipes.size()];
+    path[y].push_back(x);
 
     int direction_from;
     if(pipe_connections[(unsigned char)pipes[y][x-1]][EAST]){
@@ -82,7 +82,7 @@ int main(){
     while(pipes[y][x] != 'S'){
         is_path[y*pipes.size() + x] = true;
         if(pipe_connections[(unsigned char)pipes[y][x]][NORTH]){
-            path.push_back(make_pair(x, y));
+            path[y].push_back(x);
         }
 
         if(direction_from != WEST && pipe_connections[(unsigned char)pipes[y][x]][WEST]){
@@ -106,8 +106,8 @@ int main(){
         for(x = 0; x < (int)pipes[y].length(); ++x){
             if(!is_path[y*pipes.size() + x]){
                 int pipes_one_direction = 0;
-                for(pair<int, int> coord : path){
-                    if(coord.second == y && coord.first < x){
+                for(int pipe_x : path[y]){
+                    if(pipe_x < x){
                         ++pipes_one_direction;
                     }
                 }
