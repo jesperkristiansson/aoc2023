@@ -1,6 +1,6 @@
 #! /bin/bash
 
-CFLAGS="-Os -Wall -Wextra -g"
+CFLAGS="-O3 -std=c++11 -Wall -Wextra -g"
 
 g++ $CFLAGS one.cc -o one
 g++ $CFLAGS two.cc -o two
